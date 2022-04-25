@@ -3,6 +3,8 @@
 This toolkit creates documents for the Swedish Internet Foundation Federated Services. Either run directly from shell or use Docker.
 
 ## Prerequisites
+If necessary, edit the paths in the Makefile.
+
 If running directly the following is needed:
 
 - Pandoc >= 2.17.1.1
@@ -39,7 +41,6 @@ Edit the body.md file.
 If the prerequisites are already installed, use make, otherwise use Docker.
 
 ### Make
-If necessary, edit the paths in the Makefile.
 
 To create a draft document.
 ```
