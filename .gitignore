@@ -1,0 +1,7 @@
+*.log
+*.aux
+body.info
+body.pdf
+concat.pdf
+specification.pdf
+title.pdf

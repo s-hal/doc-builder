@@ -1,0 +1,55 @@
+\documentclass[american]{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[iso]{isodate}
+
+\usepackage{datatool, filecontents}
+\DTLsetseparator{: }
+
+
+\setmainfont{DejaVu Serif}
+\pagenumbering{gobble}
+\newcommand\LogoFile{logo.png}
+\begin{document}
+
+
+\DTLloaddb[noheader, keys={thekey,thevalue}]{mydata}{title.dat}
+\newcommand{\MyData}[1]{\DTLfetch{mydata}{thekey}{#1}{thevalue}}
+
+\begin{tabular}{ c c }
+\adjustbox{valign=t}{\includegraphics[height=1cm]{\LogoFile}}&
+\end{tabular}\\
+
+\vspace{0.5cm}
+\footnotesize
+\begin{tabular}[t]{ll}
+    \textbf{Document}&\MyData{Title}\\
+    \textbf{Identifier}&\MyData{DocumentID}\\
+    \textbf{Version}&\MyData{Version}\\
+    \textbf{Last modified}&\today\\
+    \textbf{Pages}&\MyData{Pages}\\
+    \textbf{Status}&\MyData{Status}\\
+    \textbf{License}&\MyData{License}
+  \end{tabular}\\
+
+\begin{center}
+\vspace{5cm}
+\LARGE
+\MyData{Title}
+
+\vspace{0.5cm}
+
+\large
+\MyData{Author}
+
+\vspace{3cm}
+\normalsize
+\textbf{Abstract}\\
+\MyData{Abstract}
+
+\end{center}
+
+\end{document}
+location
