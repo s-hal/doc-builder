@@ -59,7 +59,7 @@ make clean
 
 ### Docker
 
-Build iamge
+Build image
 ```
 docker build -t doc-builder .
 ```
