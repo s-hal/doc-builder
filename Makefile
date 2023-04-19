@@ -5,13 +5,15 @@ XELATEX=		/usr/bin/xelatex
 PDFTK=			/usr/bin/pdftk
 SED=				/usr/bin/sed
 
-TITLE=			title
-TITLE_TEX=	$(TITLE).tex
-TITLE_PDF=	$(TITLE).pdf
-TITLE_DAT=	$(TITLE).dat
+TITLE_PRE=			title
+TITLE_TEX=	$(TITLE_PRE).tex
+TITLE_PDF=	$(TITLE_PRE).pdf
+TITLE_DAT=	$(TITLE_PRE).dat
 BODY=				body.pdf
 BODY_INFO=	body.info
 CONCAT=			concat.pdf
+
+TITLE = $(shell grep 'Title: ' $(TITLE_DAT) | cut -d ' ' -f 2-)
 
 .DEFAULT_GOAL := draft
 
@@ -49,7 +51,8 @@ pdf: $(BODY)
 		-V monofont="DejaVu Sans Mono" \
 		-o $@
 
-	$(PDFTK) $(BODY) dump_data output $(BODY_INFO)
+	$(PDFTK) $(BODY) dump_data output - | \
+		awk -v title="$(TITLE)" '/^InfoKey: Title/ { t=1 } t && /^InfoValue:/ { $$0 = "InfoValue: " title; t=0 }1' > $(BODY_INFO)
 	$(SED) -i "s/Pages\:\ .*/Pages: $$(grep 'NumberOfPages: ' $(BODY_INFO)| $(SED) 's/NumberOfPages: //g')/" $(TITLE_DAT)
 	$(XELATEX) $(TITLE_TEX)
 	$(PDFTK) A=$(TITLE_PDF) B=$(BODY) cat A1-end B2-end output $(CONCAT)
