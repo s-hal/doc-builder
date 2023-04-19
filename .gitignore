@@ -1,5 +1,7 @@
 *.log
 *.aux
+title.dat
+body.md
 body.info
 body.pdf
 concat.pdf

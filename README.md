@@ -30,10 +30,19 @@ sudo dpkg -i $DEB
 
 ### Title Page
 
+Rename title.dat.example to title.dat
+```
+mv title.dat.example title.dat
+```
+
 Edit title.dat and change the variables accordingly. The variables Status and Pages will be set automatic by make.
 
 ### Body
 
+Rename body.md.example to body.md
+```
+mv body.md.example body.md
+```
 Edit the body.md file.
 
 ## Finalize the Document
