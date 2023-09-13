@@ -16,12 +16,11 @@ CONCAT= concat.pdf
 
 TITLE = $(shell grep 'Title: ' $(TITLE_DAT) | cut -d ' ' -f 2-)
 VERSION = $(shell grep 'Version: ' $(TITLE_DAT) | cut -d ' ' -f 2-)
-ifneq ($(filter draft final,$(MAKECMDGOALS)),)
-  TARGET := $(filter draft,$(MAKECMDGOALS), DRAFT )
+ifneq (final,$(MAKECMDGOALS))
+  OUT ?= "$(DIR)/$(TITLE) DRAFT $(VERSION).pdf"
 else
-  TARGET := DRAFT 
+  OUT ?= "$(DIR)/$(TITLE) $(VERSION).pdf"
 endif
-OUT ?= "$(DIR)/$(TITLE) $(TARGET)$(VERSION).pdf"
 
 .PHONY: draft final set-draft set-final pdf clean
 
