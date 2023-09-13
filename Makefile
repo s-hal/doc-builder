@@ -70,6 +70,3 @@ $(BODY): body.md
 
 clean:
 	rm -f $(TITLE_PDF) $(BODY) $(BODY_INFO) $(CONCAT) $(OUT) *.log *.aux
-
-debug:
-	@echo "OUT: $(OUT)"
