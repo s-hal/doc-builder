@@ -1,18 +1,27 @@
 # DOC-Builder
 
-This toolkit creates documents for the Swedish Internet Foundation Federated Services. Either run directly from shell or use Docker.
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
+## Description
+
+This toolkit is designed to generate documents for the Federated Services of the Swedish Internet Foundation. You can seamlessly execute it either directly from the shell or utilize Docker for added convenience.
+
 
 ## Prerequisites
-If necessary, edit the paths in the Makefile.
 
-If running directly the following is needed:
+If necessary, adjust paths in the Makefile.
+
+When running directly, ensure the following prerequisites are met:
 
 - Pandoc >= 2.17.1.1
 - XeLaTeX
 - PDFtk
 - Make
 
+
 ### Ubuntu
+
+Install the necessary packages using the following command:
 ```
 sudo apt-get install \
    build-essential \
@@ -20,70 +29,81 @@ sudo apt-get install \
    pdftk
 ```
 
-Download pandoc deb: https://github.com/jgm/pandoc/releases
+Download pandoc deb: [Pandoc Releases](https://github.com/jgm/pandoc/releases)
 
 ```
 sudo dpkg -i $DEB
 ```
 
-## The document
+
+## Document Setup
+
+Establish a dedicated workspace for the document by creating a folder:
+
+```
+mkdir -p ../doc-folder
+```
 
 ### Title Page
 
-Rename title.dat.example to title.dat
+Copy the title.dat.example file into the doc-folder and remove the .example extension:
 ```
-mv title.dat.example title.dat
+cp title.dat.example ../doc-folder/title.dat
 ```
 
-Edit title.dat and change the variables accordingly. The variables Status and Pages will be set automatic by make.
+Proceed to edit the title.dat file, adjusting the variables as needed. Note that the variables Status and Pages will be automatically set by the make command, streamlining the document customization process.
+
 
 ### Body
 
-Rename body.md.example to body.md
+Copy the body.md.example file into the doc-folder and remove the .example extension:
 ```
-mv body.md.example body.md
+cp body.md.example ../doc-folder/body.md
 ```
-Edit the body.md file.
+Subsequently, edit the body.md file to tailor the document content according to your requirements.
 
-## Finalize the Document
 
-If the prerequisites are already installed, use make, otherwise use Docker.
+## Finalizing the Document
+
+If the prerequisites are already installed, use make, otherwise, use Docker.
+
 
 ### Make
 
-To create a draft document.
+To generate a draft document:
 ```
-make draft
-```
-
-To create a final document
-```
-make final
+make DIR=../doc-folder
 ```
 
-To clean.
+To generate the final document:
 ```
-make clean
+make DIR=../doc-folder final
 ```
+
+To clean up and remove intermediate files:
+```
+make DIR=../doc-folder clean
+```
+
 
 ### Docker
 
-Build image
+Initiate the image build process:
 ```
 docker build -t doc-builder .
 ```
 
-To create a draft document.
+To generate a draft document:
 ```
 docker run --rm -it -v "$(pwd):/workspace" --user $(id -u):$(id -g) doc-builder draft
 ```
 
-To create a final document.
+To generate a final document.
 ```
 docker run --rm -it -v "$(pwd):/workspace" --user $(id -u):$(id -g) doc-builder final
 ```
 
-To clean.
+To clean up and remove intermediate files:
 ```
 docker run --rm -it -v "$(pwd):/workspace" --user $(id -u):$(id -g) doc-builder clean
 ```
