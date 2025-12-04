@@ -1,55 +1,37 @@
-\documentclass[american]{article}
-\usepackage[a4paper, margin=2cm]{geometry}
-\usepackage{fontspec}
-\usepackage{graphicx}
-\usepackage{adjustbox}
-\usepackage[iso]{isodate}
+\begin{titlepage}
+  \thispagestyle{empty}
 
-\usepackage{datatool, filecontents}
-\DTLsetseparator{: }
+  \IfFileExists{\DocLogo}{%
+    \begin{tabular}{@{}c@{}}
+      \adjustbox{valign=t}{\includegraphics[height=1cm]{\DocLogo}}
+    \end{tabular}\\[0.5cm]
+  }{}
+  
 
+  \footnotesize
+  {%
+    \renewcommand{\arraystretch}{1.1}%
+    \begin{tabular}[t]{ll}
+      \textbf{Document}   & \DocTitle \\
+      \textbf{Identifier} & \DocId \\
+      \textbf{Version}    & \DocVersion \\
+      \textbf{Last modified} & \today \\
+      \textbf{Pages} & \pageref*{LastPage} \\ % no hyperlink
+      \textbf{Status}     & \DocStatus \\
+      \textbf{License}    & \DocLicense
+    \end{tabular}%
+  }\\[1em]
+  \normalsize
 
-\setmainfont{DejaVu Serif}
-\pagenumbering{gobble}
-\newcommand\LogoFile{logo.png}
-\begin{document}
+  \begin{center}
+    \vspace{2cm}
+    {\LARGE \DocTitle \par}
+    \vspace{0.75cm}
+    {\large \DocAuthor \par}
+    \vspace{2.5cm}
+    \normalsize
+    \textbf{Abstract}\\[0.5\baselineskip]
+  \end{center}
+  \DocAbstract
 
-
-\DTLloaddb[noheader, keys={thekey,thevalue}]{mydata}{title.dat}
-\newcommand{\MyData}[1]{\DTLfetch{mydata}{thekey}{#1}{thevalue}}
-
-\begin{tabular}{ c c }
-\adjustbox{valign=t}{\includegraphics[height=1cm]{\LogoFile}}&
-\end{tabular}\\
-
-\vspace{0.5cm}
-\footnotesize
-\begin{tabular}[t]{ll}
-    \textbf{Document}&\MyData{Title}\\
-    \textbf{Identifier}&\MyData{DocumentID}\\
-    \textbf{Version}&\MyData{Version}\\
-    \textbf{Last modified}&\today\\
-    \textbf{Pages}&\MyData{Pages}\\
-    \textbf{Status}&\MyData{Status}\\
-    \textbf{License}&\MyData{License}
-  \end{tabular}\\
-
-\begin{center}
-\vspace{5cm}
-\LARGE
-\MyData{Title}
-
-\vspace{0.5cm}
-
-\large
-\MyData{Author}
-
-\vspace{3cm}
-\normalsize
-\textbf{Abstract}\\
-\MyData{Abstract}
-
-\end{center}
-
-\end{document}
-location
+\end{titlepage}

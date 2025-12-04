@@ -1,72 +1,57 @@
-PANDOC= /usr/bin/pandoc
-XELATEX= /usr/bin/xelatex
-PDFTK= /usr/bin/pdftk
-SED= /usr/bin/sed
+PANDOC   = /usr/bin/pandoc
 
-DIR ?= .
-TITLE_PRE= title
-TITLE_TEX= $(TITLE_PRE).tex
-TITLE_PDF= $(TITLE_PRE).pdf
-TITLE_DAT= $(TITLE_PRE).dat
-BODY= body.pdf
-BODY_INFO= body.info
-CONCAT= concat.pdf
+DIR      ?= .
+BODY     = body.md
+METADATA = metadata.yaml
+TEMPLATE = template.tex
+
+# Optional sources to copy from (e.g. another repo)
+SRC_BODY     ?=
+SRC_METADATA ?=
+
+TITLE_NAME = $(shell \
+  grep '^title:' $(METADATA) | head -n1 | cut -d ':' -f2- | \
+  sed 's/^[[:space:]]*//;s/[[:space:]]*$$//' \
+)
+VERSION    = $(shell grep 'version:' $(METADATA) | head -n1 | cut -d ':' -f 2 | tr -d ' "')
 
 .DEFAULT_GOAL := draft
 
-TITLE = $(shell grep 'Title: ' $(TITLE_DAT) | cut -d ' ' -f 2-)
-VERSION = $(shell grep 'Version: ' $(TITLE_DAT) | cut -d ' ' -f 2-)
-ifneq (final,$(MAKECMDGOALS))
-  OUT ?= "$(DIR)/$(TITLE) DRAFT $(VERSION).pdf"
-else
-  OUT ?= "$(DIR)/$(TITLE) $(VERSION).pdf"
-endif
+.PHONY: draft final render clean prepare
 
-.PHONY: draft final set-draft set-final pdf clean
+draft: STATUS = Draft
+draft: OUT = "$(DIR)/$(TITLE_NAME) DRAFT $(VERSION).pdf"
+draft: prepare render
 
-draft: copy-files set-draft pdf
+final: STATUS = Final
+final: OUT = "$(DIR)/$(TITLE_NAME) $(VERSION).pdf"
+final: prepare render
 
-final: copy-files set-final pdf
+prepare:
+	@if [ -n "$(SRC_BODY)" ]; then \
+	  cp "$(SRC_BODY)" "$(BODY)"; \
+	fi
+	@if [ -n "$(SRC_METADATA)" ]; then \
+	  cp "$(SRC_METADATA)" "$(METADATA)"; \
+	fi
 
-copy-files:
-	cp $(DIR)/body.md $(DIR)/title.dat .
-
-set-draft:
-	$(SED) -i "s/Status\:\ .*/Status: Draft/" $(TITLE_DAT)
-
-set-final:
-	$(SED) -i "s/Status\:\ .*/Status: Final/" $(TITLE_DAT)
-
-pdf: $(BODY)
-
-#%.pdf: %.md
-$(BODY): body.md
-	$(PANDOC) $< \
-		-t pdf \
-		--from=markdown+yaml_metadata_block \
+render:
+	$(PANDOC) $(BODY) \
+		--verbose \
+		--template=$(TEMPLATE) \
+		--metadata-file=$(METADATA) \
+		--variable=status:"$(STATUS)" \
+		--pdf-engine=xelatex \
 		--toc \
-		--toc-depth 6 \
+		--toc-depth=6 \
+		--number-sections \
 		--citeproc \
 		--bibliography references.bib \
 		--csl elsevier-with-titles.csl \
-		--pdf-engine=xelatex \
-		--number-sections \
 		--lua-filter=section-number.lua \
 		--highlight-style=tango \
 		-V linkcolor:blue \
-		-V geometry:a4paper \
-		-V geometry:margin=2cm \
-		-V mainfont="DejaVu Serif" \
-		-V monofont="DejaVu Sans Mono" \
-		-o $@
-
-	$(PDFTK) $(BODY) dump_data output - | \
-		awk -v title="$(TITLE)" '/^InfoKey: Title/ { t=1 } t && /^InfoValue:/ { $$0 = "InfoValue: " title; t=0 }1' > $(BODY_INFO)
-	$(SED) -i "s/Pages\:\ .*/Pages: $$(grep 'NumberOfPages: ' $(BODY_INFO)| $(SED) 's/NumberOfPages: //g')/" $(TITLE_DAT)
-	$(XELATEX) $(TITLE_TEX)
-	$(PDFTK) A=$(TITLE_PDF) B=$(BODY) cat A1-end B2-end output $(CONCAT)
-	$(PDFTK) $(CONCAT) update_info $(BODY_INFO) output $(OUT)
-	rm -f $(TITLE_PDF) $(BODY) $(BODY_INFO) $(CONCAT)
+		-o $(OUT)
 
 clean:
-	rm -f $(TITLE_PDF) $(BODY) $(BODY_INFO) $(CONCAT) $(OUT) *.log *.aux
+	rm -f *.pdf

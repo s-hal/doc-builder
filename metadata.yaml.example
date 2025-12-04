@@ -1,0 +1,24 @@
+title: Insert title
+author: The author
+date: \today
+
+version: V0.1.0
+document_id: https://example.com/change-this
+license: Creative Commons BY-SA 3.0
+logo: logo.png
+
+abstract: |
+  This document specifies the <protocol or system> technology profile used in
+  the federations operated by <Organization>.
+
+colorlinks: true
+linkcolor: blue
+citecolor: blue
+geometry: "a4paper, margin=2cm"
+mainfont: DejaVu Serif
+monofont: DejaVu Sans Mono
+linestretch: 1.1
+link-citations: true
+include-before:
+  - '\newpage'
+  - '\let\emph\textit'
