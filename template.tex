@@ -289,6 +289,16 @@ $highlighting-macros$
 $endif$
 $if(tables)$
 \usepackage{longtable,booktabs,array}
+\usepackage{colortbl,needspace,etoolbox}
+\definecolor{DocBuilderTableHeader}{HTML}{D8E1E7}
+\definecolor{DocBuilderTableBand}{HTML}{F1F5F7}
+\newcommand{\DocBuilderTableHeaderCell}{\cellcolor{DocBuilderTableHeader}}
+\newcommand{\DocBuilderTableBandCell}{\cellcolor{DocBuilderTableBand}}
+\BeforeBeginEnvironment{longtable}{\Needspace{8\baselineskip}}
+\AtBeginEnvironment{longtable}{%
+  \setlength{\tabcolsep}{4pt}%
+  \setlength{\extrarowheight}{2pt}%
+}
 $if(multirow)$
 \usepackage{multirow}
 $endif$
@@ -301,7 +311,6 @@ $if(beamer)$
 \makeatother
 $else$
 % Correct order of tables after \paragraph or \subparagraph
-\usepackage{etoolbox}
 \makeatletter
 \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
 \makeatother

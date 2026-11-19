@@ -45,6 +45,7 @@ render:
 		--toc \
 		--toc-depth=6 \
 		--number-sections \
+		--lua-filter=document-defaults.lua \
 		--citeproc \
 		--bibliography references.bib \
 		--csl elsevier-with-titles.csl \

@@ -75,6 +75,11 @@ cp body.md.example ../doc-folder/profile.md
 
 Edit `../doc-folder/profile.md` to define the actual content of your document.
 
+The shared PDF template shades table headers and alternates the background of
+body rows. Headers repeat when a Markdown table continues on another page.
+Doc Builder uses **References** as the default heading for an appended
+bibliography. Authors can supply their own heading in Markdown.
+
 ## Building the document
 
 If the prerequisites are installed locally, you can use `make`. Otherwise, use
